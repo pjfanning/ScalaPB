@@ -1197,6 +1197,9 @@ private[scalapb] class ScalaCompatConstants(emitScala3Sources: Boolean) {
   val MessageLens =
     if (emitScala3Sources) "_root_.scalapb.lenses.MessageLens"
     else "_root_.scalapb.lenses.ObjectLens"
+
+  val ImplicitDef: String = if (emitScala3Sources) "given" else "implicit def"
+  val ImplicitVal: String = if (emitScala3Sources) "given" else "implicit val"
 }
 
 object Helper {
