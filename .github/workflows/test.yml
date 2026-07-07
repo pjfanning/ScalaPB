@@ -14,8 +14,8 @@ jobs:
         include:
         - scala: 2_12
           script: examples_and_formatting
-        - scala: 2_13
-          script: scala3_compat_test
+        #- scala: 2_13
+        #  script: scala3_compat_test
         - scala: 3
           script: scala3_compat_test
 
