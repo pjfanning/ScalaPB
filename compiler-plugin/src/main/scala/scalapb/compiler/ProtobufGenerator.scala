@@ -55,7 +55,9 @@ class ProtobufGenerator(
       .indent
       .seq(e.recognizedAnnotationList)
       .add(s"sealed trait ${e.recognizedEnum.nameSymbol} extends $name")
-      .add(s"${e.getFile.V.ImplicitDef} enumCompanion: _root_.scalapb.GeneratedEnumCompanion[$name] = this")
+      .add(
+        s"${e.getFile.V.ImplicitDef} enumCompanion: _root_.scalapb.GeneratedEnumCompanion[$name] = this"
+      )
       .newline
       .print(e.getValues().asScala) { case (p, v) =>
         val firstVal = valuesByNumber(v.getNumber()).head
@@ -843,10 +845,12 @@ class ProtobufGenerator(
 
     val myFullScalaName = message.scalaType.fullName
     printer
-      .add(s"""${message.V.ImplicitDef} messageReads: _root_.scalapb.descriptors.Reads[${myFullScalaName}] = _root_.scalapb.descriptors.Reads{
-              |  case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
-              |    _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), \"FieldDescriptor does not match message type.\")
-              |    ${myFullScalaName}(""".stripMargin)
+      .add(
+        s"""${message.V.ImplicitDef} messageReads: _root_.scalapb.descriptors.Reads[${myFullScalaName}] = _root_.scalapb.descriptors.Reads{
+           |  case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
+           |    _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), \"FieldDescriptor does not match message type.\")
+           |    ${myFullScalaName}(""".stripMargin
+      )
       .indent(3)
       .call { printer =>
         val fields = message.fields.collect {
