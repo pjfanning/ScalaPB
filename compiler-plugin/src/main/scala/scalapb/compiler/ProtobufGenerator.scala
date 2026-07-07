@@ -1300,10 +1300,16 @@ class ProtobufGenerator(
     val className         = message.scalaType.nameSymbol
     val companionType     = message.companionBaseClasses.mkString(" with ")
     val companionTypeDecl = message.companionBaseClasses.mkString(message.V.WithOperator)
+    // companionTypeDeclFormatted works around an issue in Scala 3 compiler
+    val companionTypeDeclFormatted =
+      if (companionTypeDecl.contains(" & ")) s"($companionTypeDecl)"
+      else companionTypeDecl
     printer
       .seq(message.companionAnnotationList)
-      .add(s"""object $className extends $companionType {
-              |  ${message.V.ImplicitDef} messageCompanion: $companionTypeDecl = this""".stripMargin)
+      .add(
+        s"""object $className extends $companionType {
+           |  ${message.V.ImplicitDef} messageCompanion: $companionTypeDeclFormatted = this""".stripMargin
+      )
       .indent
       .when(message.javaConversions)(generateToJavaProto(message))
       .when(message.javaConversions)(generateFromJavaProto(message))
